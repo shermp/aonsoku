@@ -2,8 +2,6 @@ name: 'publish'
 
 on:
   push:
-    tags:
-      - 'v*'
 
 jobs:
   publish-tauri:
@@ -75,12 +73,12 @@ jobs:
         run: pnpm install --ignore-scripts
 
       - uses: tauri-apps/tauri-action@v0
+        id: tauri
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: ${{ github.ref_name }}
-          releaseName: 'Aonsoku ${{ github.ref_name }}'
-          releaseBody: 'See the assets to download this version and install.'
-          releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+      
+      - name: Print artifact paths
+        run: echo -e '${{ steps.tauri.outputs.artifactPaths }}'
